@@ -1,0 +1,115 @@
+*magnum.txt*	Pure Vim script big integer library
+
+Author: glts <676c7473@gmail.com>
+License: Same terms as Vim itself (see |license|)
+
+DESCRIPTION					*magnum*
+
+Magnum is a big integer library implemented in Vim script.  Currently it
+provides a small set of predicates, arithmetic, and conversion operations.
+
+Magnum has a lean user interface.  There is a single point of entry,
+|magnum#Int|, which accepts a number or a string and returns an Integer
+object.  All further interaction happens with such Integer objects.
+
+This plugin requires the |Maktaba| library.
+
+INTERFACE					*magnum-interface*
+
+"Integer" is the name of the immutable multiple-precision integer data type
+that lies at the core of magnum.  You can obtain an instance of Integer by
+calling |magnum#Int|.
+
+Arithmetic and other operations are implemented as function calls on Integer
+objects.  They are documented below.
+
+						*magnum#Int*
+magnum#Int({number})
+magnum#Int({string} [, {base}])
+				Creates a new immutable Integer.  The argument
+				may be a {number}, or a {string} representing
+				a number.  In the latter case an optional
+				{base} between 2 and 36 specifying the radix
+				of {string} may be given.  Default is base 10.
+
+				Throws |ERROR(WrongType)| for arguments of the
+				wrong type.
+				Throws |ERROR(BadValue)| for invalid {base},
+				and for a {string} that cannot be parsed.
+
+In the following, {value} represents an Integer argument.  All functions throw
+|ERROR(WrongType)| when given an argument other than an Integer.
+
+Predicates ~
+
+Integer.Eq({value})		Returns true if Integer is equal to {value},
+				false otherwise.
+
+Integer.Cmp({value})		Returns -1, 0, 1, depending on whether Integer
+				is less than, equal, greater than {value}
+				respectively.
+
+Integer.IsZero()		True if Integer is zero.
+Integer.IsPositive()		True if Integer is positive.
+Integer.IsNegative()		True if Integer is negative.
+Integer.IsEven()		True if Integer is even.
+Integer.IsOdd()			True if Integer is odd.
+
+Arithmetic operators ~
+
+Integer.Abs()			Returns the absolute value of Integer, | x |.
+
+Integer.Neg()			Returns the negated value of Integer, -x.
+
+Integer.Add({value})		Adds {value} to Integer and returns the
+				result, x + y.
+
+Integer.Sub({value})		Subtracts {value} from Integer and returns the
+				result, x - y.
+
+Integer.Mul({value})		Multiplies Integer with {value} and returns
+				the result, x * y.
+
+Integer.Div({value})		Divides Integer by {value} and returns the
+				quotient, x / y.
+				Throws |ERROR(BadValue)| on division by zero.
+
+Integer.Rem({value})		Divides Integer by {value} and returns the
+				remainder, x % y.
+				Throws |ERROR(BadValue)| on division by zero.
+
+Integer.DivRem({value})		Divides Integer by {value} and returns the
+				the pair [quotient, remainder].
+				Throws |ERROR(BadValue)| on division by zero.
+
+Integer.Pow({number})		Raises Integer to the power of {number}, which
+				must be a number, and returns the result, x^y.
+				Throws |ERROR(WrongType)| when {number} is not
+				a number.
+				Throws |ERROR(BadValue)| when {number} is
+				negative.
+
+Accessor functions ~
+
+Integer.Number()		Returns Integer as a Vim number.
+				Throws "ERROR(NumberOverflow)" when the
+				Integer does not fit in a number.
+
+Integer.String([{base}])	Returns a string representation of Integer.
+				The optional argument {base} specifies the
+				radix to be used and may be any number between
+				2 and 36.  Default is base 10.
+				Throws |ERROR(WrongType)| when {base} is not
+				a number.
+				Throws |ERROR(BadValue)| for invalid {base}.
+
+Constants ~
+						*magnum#ZERO*
+magnum#ZERO			An immutable Integer with value 0.
+						*magnum#ONE*
+magnum#ONE			An immutable Integer with value 1.
+
+Note that due to the way in which variable scoping works in Vim, you must
+qualify these variables with |g:| when using them inside a function.
+
+ vim:tw=78:ts=8:ft=help:norl:
