@@ -1,7 +1,7 @@
 " magnum.vim - Pure Vim script big integer library
 " Author: glts <676c7473@gmail.com>
-" Version: 0.0.0-SNAPSHOT
-" Date: 2014-02-17
+" Version: 1.0.0-beta
+" Date: 2014-02-18
 "
 " The code in this library uses standard algorithms. I relied heavily on the
 " descriptions in the book 'BigNum math' (Syngress, 2006) and the accompanying
