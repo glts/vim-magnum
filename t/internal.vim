@@ -2,14 +2,14 @@
 " to extract the <SID> for vspec#hint below.
 runtime autoload/magnum.vim
 
-function! SID()
-  redir => scripts
+function! SID() abort
+  redir => l:scripts
   silent scriptnames
   redir END
   for line in split(scripts, '\n')
-    let [sid, path] = matchlist(line, '^\s*\(\d\+\):\s*\(.*\)$')[1:2]
-    if path =~# 'autoload/magnum\.vim$'
-      return '<SNR>' . sid . '_'
+    let [l:sid, l:path] = matchlist(line, '^\s*\(\d\+\):\s*\(.*\)$')[1:2]
+    if l:path =~# 'autoload/magnum\.vim$'
+      return '<SNR>' . l:sid . '_'
     endif
   endfor
 endfunction
