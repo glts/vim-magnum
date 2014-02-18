@@ -1,3 +1,5 @@
+" Internal function tests
+
 " We need to force sourcing of the autoload script here, in order to be able
 " to extract the <SID> for vspec#hint below.
 runtime autoload/magnum.vim
