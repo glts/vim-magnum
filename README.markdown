@@ -21,6 +21,12 @@ magnum.vim might look like.
 [2]: https://github.com/glts/vim-magnum/blob/master/doc/magnum.txt
 [3]: https://github.com/glts/vim-magnum/wiki/Usage-examples
 
+Requirements
+------------
+
+*   Vim 7.2 or later
+*   [Maktaba][1] Vim plugin, version 1.5.0 or later
+
 Installation
 ------------
 
