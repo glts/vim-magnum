@@ -1,7 +1,7 @@
 magnum.vim
 ==========
 
-Magnum is a big integer library for Vim plugins written purely in Vim
+Magnum is a big integer library for Vim plugins written entirely in Vim
 script. Currently it provides just a small set of predicates,
 arithmetic, and conversion operations.
 
