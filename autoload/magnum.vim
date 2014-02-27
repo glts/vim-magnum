@@ -397,27 +397,26 @@ function! s:DivRemDigit(a, b) abort
   return [l:q, l:r]
 endfunction
 
-" Returns the pair [quotient, remainder] obtained by dividing this Integer
-" by val.
-function! magnum#DivRem(val) dict abort
-  call s:EnsureIsInt(a:val, 'DivRem')
-  if a:val.IsZero()
+" Divides Integer a by Integer b and returns the resulting pair of Integers
+" [quotient, remainder]. This is the high-level signed division function.
+function! s:DivRem(a, b) abort
+  if a:b.IsZero()
     throw maktaba#error#BadValue('Division by zero')
   endif
-  if s:Compare(self, a:val) < 0
-    return [g:magnum#ZERO, self]
+  if s:Compare(a:a, a:b) < 0
+    return [g:magnum#ZERO, a:a]
   endif
-  if len(a:val._dg) == 1
-    let [l:q, l:rd] = s:DivRemDigit(self, a:val._dg[0])
-    let l:q._neg = self._neg != a:val._neg
-    let l:r = s:NewInt(l:rd ? [l:rd] : [], self._neg)
+  if len(a:b._dg) == 1
+    let [l:q, l:rd] = s:DivRemDigit(a:a, a:b._dg[0])
+    let l:q._neg = a:a._neg != a:b._neg
+    let l:r = s:NewInt(l:rd ? [l:rd] : [], a:a._neg)
     return [l:q, l:r]
   endif
 
   " Normalise Integers l:x and l:y, which serve as non-negative mutable
   " working copies of dividend and divisor.
-  let l:x = s:NewInt(self._dg, 0)
-  let l:y = s:NewInt(a:val._dg, 0)
+  let l:x = s:NewInt(a:a._dg, 0)
+  let l:y = s:NewInt(a:b._dg, 0)
   let l:norm = 0
   while l:y._dg[-1] < s:POW2[s:BITS-l:norm-1]
     let l:norm += 1
@@ -473,11 +472,11 @@ function! magnum#DivRem(val) dict abort
   endfor
 
   " Finalise the result pair. Shift the remainder back l:norm places.
-  let l:q = s:NewInt(l:dg, self._neg != a:val._neg)
+  let l:q = s:NewInt(l:dg, a:a._neg != a:b._neg)
   call s:TrimZeroes(l:q)
   let l:r = s:Rsh(l:x, l:norm)
   if !l:r.IsZero()
-    let l:r._neg = self._neg
+    let l:r._neg = a:a._neg
   endif
   return [l:q, l:r]
 endfunction
@@ -485,13 +484,20 @@ endfunction
 " Returns the quotient of this Integer and val.
 function! magnum#Div(val) dict abort
   call s:EnsureIsInt(a:val, 'Div')
-  return self.DivRem(a:val)[0]
+  return s:DivRem(self, a:val)[0]
 endfunction
 
 " Returns the remainder obtained by dividing this Integer by val.
 function! magnum#Rem(val) dict abort
   call s:EnsureIsInt(a:val, 'Rem')
-  return self.DivRem(a:val)[1]
+  return s:DivRem(self, a:val)[1]
+endfunction
+
+" Returns the pair [quotient, remainder] obtained by dividing this Integer
+" by val.
+function! magnum#DivRem(val) dict abort
+  call s:EnsureIsInt(a:val, 'DivRem')
+  return s:DivRem(self, a:val)
 endfunction
 
 function! s:EnsureIsPositive(number) abort
