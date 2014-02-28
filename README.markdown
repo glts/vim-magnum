@@ -24,15 +24,15 @@ magnum.vim might look like.
 Requirements
 ------------
 
-*   Vim 7.2 or later
-*   [Maktaba][1] Vim plugin, version 1.5.0 or later
+*   Vim 7.3 or later (Vim 7.2 should also work just fine)
+*   [Maktaba][1] Vim plugin
 
 Installation
 ------------
 
 Use your preferred installation method.
 
-But keep in mind that magnum.vim depends on [Maktaba][1], so be sure to
+Keep in mind that magnum.vim depends on [Maktaba][1], so be sure to
 install that as well if your plugin manager doesn't handle dependencies
 for you.
 
