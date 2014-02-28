@@ -34,7 +34,7 @@ endif
 let s:BASE = 16384
 let s:BITS = 14
 
-" Powers of 2 up to s:BASE. These are used to implement bit-shifting.
+" Powers of 2 up to s:BASE. These are used to implement bit shifting.
 let s:POW2 = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384]
 
 " Digit limit for Comba multiplication and squaring.
@@ -153,7 +153,7 @@ function! s:Add(a, b) abort
     let l:x = a:b._dg
   endif
   " Copy the bigger list. The values aren't actually needed, this is just an
-  " efficient way to create a new list of length max.
+  " efficient way to create a new list of length l:max.
   let l:dg = copy(l:x)
   let l:u = 0
   for i in range(l:min)
@@ -292,7 +292,7 @@ function! magnum#Mul(val) dict abort
   return l:ret
 endfunction
 
-" Left shift Integer x by b digits. Equivalent to multiplication with
+" Left-shift Integer x by b digits. Equivalent to multiplication with
 " s:BASE^b. This function assumes b >= 0, mutates x in place, ignores sign.
 function! s:LshDigits(x, b) abort
   " Own algorithm: simply prepend b zeroes to the magnitude.
@@ -302,7 +302,7 @@ function! s:LshDigits(x, b) abort
   return a:x
 endfunction
 
-" Right shift Integer x by b digits. Equivalent to division by s:BASE^b.
+" Right-shift Integer x by b digits. Equivalent to division by s:BASE^b.
 " Assumes b >= 0, mutates x in place, ignores sign.
 function! s:RshDigits(x, b) abort
   if a:b > 0 && !a:x.IsZero()
@@ -316,7 +316,7 @@ function! s:RshDigits(x, b) abort
   return a:x
 endfunction
 
-" Left shift Integer x by b (bits). Equivalent to multiplication with 2^b.
+" Left-shift Integer x by b (bits). Equivalent to multiplication with 2^b.
 " Assumes b >= 0. Mutates x in place, and ignores the sign.
 function! s:Lsh(x, b) abort
   " First shift by whole digits, then bit-shift by the remaining amount.
@@ -340,7 +340,7 @@ function! s:Lsh(x, b) abort
   return a:x
 endfunction
 
-" Right shift Integer x by b. Equivalent to division by 2^b. Assumes b >= 0.
+" Right-shift Integer x by b. Equivalent to division by 2^b. Assumes b >= 0.
 " Mutates x in place, ignores sign.
 function! s:Rsh(x, b) abort
   if a:b >= s:BITS
