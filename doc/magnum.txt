@@ -79,7 +79,7 @@ Integer.Rem({value})		Divides Integer by {value} and returns the
 				Throws |ERROR(BadValue)| on division by zero.
 
 Integer.DivRem({value})		Divides Integer by {value} and returns the
-				the pair [quotient, remainder].
+				pair [quotient, remainder].
 				Throws |ERROR(BadValue)| on division by zero.
 
 Integer.Pow({number})		Raises Integer to the power of {number}, which
