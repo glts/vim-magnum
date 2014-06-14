@@ -500,7 +500,7 @@ function! magnum#DivRem(val) dict abort
   return s:DivRem(self, a:val)
 endfunction
 
-function! s:EnsureIsPositive(number) abort
+function! s:EnsureIsPositiveOrZero(number) abort
   if a:number >= 0
     return a:number
   endif
@@ -564,7 +564,7 @@ endfunction
 " Returns this Integer raised to the power of number. The argument is a Vim
 " number, not an Integer.
 function! magnum#Pow(number) dict abort
-  let l:n = s:EnsureIsPositive(maktaba#ensure#IsNumber(a:number))
+  let l:n = s:EnsureIsPositiveOrZero(maktaba#ensure#IsNumber(a:number))
   let l:bits = []
   while l:n != 0
     call insert(l:bits, l:n % 2)
