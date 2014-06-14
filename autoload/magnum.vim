@@ -1,7 +1,7 @@
 " magnum.vim - Pure Vim script big integer library
 " Author: glts <676c7473@gmail.com>
-" Version: 1.0.0
-" Date: 2014-02-28
+" Version: 1.0.1
+" Date: 2014-06-14
 "
 " The code in this library uses standard algorithms. I relied heavily on the
 " descriptions in the book 'BigNum math' (Syngress, 2006) and the accompanying
@@ -500,7 +500,7 @@ function! magnum#DivRem(val) dict abort
   return s:DivRem(self, a:val)
 endfunction
 
-function! s:EnsureIsPositive(number) abort
+function! s:EnsureIsPositiveOrZero(number) abort
   if a:number >= 0
     return a:number
   endif
@@ -564,23 +564,19 @@ endfunction
 " Returns this Integer raised to the power of number. The argument is a Vim
 " number, not an Integer.
 function! magnum#Pow(number) dict abort
-  let l:b = maktaba#ensure#IsNumber(a:number)
-  call s:EnsureIsPositive(l:b)
-  " A number is a signed int32, so there can be 31 bits in the exponent. For
-  " a number that has the highest bit (bit 30) set, special treatment is
-  " necessary to avoid overflow. But since the power of such a number is in
-  " general too large to be computed, there is no need to implement that logic.
-  if l:b >= 0x40000000
-    throw maktaba#error#Failure('Not implemented, exponent too large')
-  endif
-  let l:ret = g:magnum#ONE
-  for i in range(30)
+  let l:n = s:EnsureIsPositiveOrZero(maktaba#ensure#IsNumber(a:number))
+  let l:bits = []
+  while l:n != 0
+    call insert(l:bits, l:n % 2)
+    let l:n = l:n / 2
+  endwhile
+  " Don't use magnum#ONE for l:ret, its _neg may be manipulated directly below.
+  let l:ret = s:NewInt([1], 0)
+  for l:bit in l:bits
     let l:ret = s:Sqr(l:ret)
-    " Multiply if high bit (bit 29) is set.
-    if (l:b % 0x40000000) / 0x20000000
+    if l:bit
       let l:ret = l:ret.Mul(self)
     endif
-    let l:b = (2 * l:b) % 0x40000000
   endfor
   if self._neg
     let l:ret._neg = a:number % 2

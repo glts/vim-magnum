@@ -276,9 +276,7 @@ describe "Integer.Pow"
       let xm = xm.Mul(x)
     endfor
     Expect x.Pow(7) to_be_equal xm
-    " Implementation detail: Exponents > 0x40000000 fail with ERROR(Failure)!
-    Expect g:magnum#ONE.Pow(0x3fffffff) to_be_equal g:magnum#ONE
-    Expect expr { g:magnum#ONE.Pow(0x7fffffff) } to_throw 'ERROR(Failure)'
+    Expect g:magnum#ONE.Pow(0x7fffffff) to_be_equal g:magnum#ONE
   end
 
   it "handles sign correctly"
