@@ -167,10 +167,10 @@ describe "Integer.Pow"
     call StartTime()
   end
 
-  it "raises to 500 small powers"
+  it "raises to 1000 small powers"
     let x = magnum#Int(82)
-    for i in range(500)
-      let _ = x.Pow(5)
+    for i in range(1000)
+      let _ = x.Pow(6)
     endfor
   end
 
