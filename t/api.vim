@@ -285,6 +285,9 @@ describe "Integer.Pow"
     Expect x.Pow(1) to_be_equal x
     Expect x.Pow(2) to_be_equal magnum#Int(81)
     Expect x.Pow(3) to_be_equal magnum#Int(-729)
+    let n_1 = g:magnum#ONE.Neg()
+    Expect n_1.Pow(0x7ffffffe) to_be_equal g:magnum#ONE
+    Expect n_1.Pow(0x7fffffff) to_be_equal g:magnum#ONE.Neg()
   end
 
   it "throws exception for invalid argument"
