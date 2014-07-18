@@ -38,8 +38,8 @@ for you.
 
 For example, with [pathogen.vim][4] the installation goes:
 
-    git clone git://github.com/google/maktaba.git ~/.vim/bundle/maktaba
-    git clone git://github.com/glts/vim-magnum.git ~/.vim/bundle/magnum
+    git clone https://github.com/google/maktaba.git ~/.vim/bundle/maktaba
+    git clone https://github.com/glts/vim-magnum.git ~/.vim/bundle/magnum
 
 [4]: http://www.vim.org/scripts/script.php?script_id=2332
 
