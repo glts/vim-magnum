@@ -1,7 +1,7 @@
 {
     "name": "magnum.vim",
     "description": "Pure Vim script big integer library",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "author": "glts <676c7473@gmail.com>",
     "dependencies": {
         "maktaba": {}
