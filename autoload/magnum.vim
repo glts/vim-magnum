@@ -586,25 +586,25 @@ endfunction
 
 " Method prototype for Integers. Extracted from s:NewInt for efficiency.
 let s:PROTO = {
-  \ 'IsZero': function('magnum#IsZero'),
-  \ 'IsPositive': function('magnum#IsPositive'),
-  \ 'IsNegative': function('magnum#IsNegative'),
-  \ 'IsEven': function('magnum#IsEven'),
-  \ 'IsOdd': function('magnum#IsOdd'),
-  \ 'Eq': function('magnum#Eq'),
-  \ 'Cmp': function('magnum#Cmp'),
-  \ 'Abs': function('magnum#Abs'),
-  \ 'Neg': function('magnum#Neg'),
-  \ 'Add': function('magnum#Add'),
-  \ 'Sub': function('magnum#Sub'),
-  \ 'Mul': function('magnum#Mul'),
-  \ 'Div': function('magnum#Div'),
-  \ 'Rem': function('magnum#Rem'),
-  \ 'DivRem': function('magnum#DivRem'),
-  \ 'Pow': function('magnum#Pow'),
-  \ 'Number': function('magnum#Number'),
-  \ 'String': function('magnum#String'),
-  \ }
+    \ 'IsZero': function('magnum#IsZero'),
+    \ 'IsPositive': function('magnum#IsPositive'),
+    \ 'IsNegative': function('magnum#IsNegative'),
+    \ 'IsEven': function('magnum#IsEven'),
+    \ 'IsOdd': function('magnum#IsOdd'),
+    \ 'Eq': function('magnum#Eq'),
+    \ 'Cmp': function('magnum#Cmp'),
+    \ 'Abs': function('magnum#Abs'),
+    \ 'Neg': function('magnum#Neg'),
+    \ 'Add': function('magnum#Add'),
+    \ 'Sub': function('magnum#Sub'),
+    \ 'Mul': function('magnum#Mul'),
+    \ 'Div': function('magnum#Div'),
+    \ 'Rem': function('magnum#Rem'),
+    \ 'DivRem': function('magnum#DivRem'),
+    \ 'Pow': function('magnum#Pow'),
+    \ 'Number': function('magnum#Number'),
+    \ 'String': function('magnum#String'),
+    \ }
 
 " Constructs a new Integer from magnitude dg and sign neg. This copies the
 " (mutable) magnitude list dg, in order to prevent accidental sharing.
