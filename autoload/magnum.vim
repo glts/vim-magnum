@@ -679,7 +679,7 @@ function! magnum#Int(arg, ...) abort
   throw maktaba#error#WrongType('Expected number or string argument')
 endfunction
 
-let s:MIN_INT = magnum#Int(-0x80000000)
+let s:MIN_INT = magnum#Int(0x80000000)
 let s:MAX_INT = magnum#Int(0x7fffffff)
 
 " Returns this Integer as a Vim number. This throws a ERROR(NumberOverflow)
