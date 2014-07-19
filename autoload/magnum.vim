@@ -1,7 +1,7 @@
 " magnum.vim - Pure Vim script big integer library
 " Author: glts <676c7473@gmail.com>
-" Version: 1.0.1
-" Date: 2014-06-14
+" Version: 1.0.2
+" Date: 2014-07-19
 "
 " The code in this library uses standard algorithms. I relied heavily on the
 " descriptions in the book 'BigNum math' (Syngress, 2006) and the accompanying
@@ -586,25 +586,25 @@ endfunction
 
 " Method prototype for Integers. Extracted from s:NewInt for efficiency.
 let s:PROTO = {
-  \ 'IsZero': function('magnum#IsZero'),
-  \ 'IsPositive': function('magnum#IsPositive'),
-  \ 'IsNegative': function('magnum#IsNegative'),
-  \ 'IsEven': function('magnum#IsEven'),
-  \ 'IsOdd': function('magnum#IsOdd'),
-  \ 'Eq': function('magnum#Eq'),
-  \ 'Cmp': function('magnum#Cmp'),
-  \ 'Abs': function('magnum#Abs'),
-  \ 'Neg': function('magnum#Neg'),
-  \ 'Add': function('magnum#Add'),
-  \ 'Sub': function('magnum#Sub'),
-  \ 'Mul': function('magnum#Mul'),
-  \ 'Div': function('magnum#Div'),
-  \ 'Rem': function('magnum#Rem'),
-  \ 'DivRem': function('magnum#DivRem'),
-  \ 'Pow': function('magnum#Pow'),
-  \ 'Number': function('magnum#Number'),
-  \ 'String': function('magnum#String'),
-  \ }
+    \ 'IsZero': function('magnum#IsZero'),
+    \ 'IsPositive': function('magnum#IsPositive'),
+    \ 'IsNegative': function('magnum#IsNegative'),
+    \ 'IsEven': function('magnum#IsEven'),
+    \ 'IsOdd': function('magnum#IsOdd'),
+    \ 'Eq': function('magnum#Eq'),
+    \ 'Cmp': function('magnum#Cmp'),
+    \ 'Abs': function('magnum#Abs'),
+    \ 'Neg': function('magnum#Neg'),
+    \ 'Add': function('magnum#Add'),
+    \ 'Sub': function('magnum#Sub'),
+    \ 'Mul': function('magnum#Mul'),
+    \ 'Div': function('magnum#Div'),
+    \ 'Rem': function('magnum#Rem'),
+    \ 'DivRem': function('magnum#DivRem'),
+    \ 'Pow': function('magnum#Pow'),
+    \ 'Number': function('magnum#Number'),
+    \ 'String': function('magnum#String'),
+    \ }
 
 " Constructs a new Integer from magnitude dg and sign neg. This copies the
 " (mutable) magnitude list dg, in order to prevent accidental sharing.
@@ -635,25 +635,29 @@ function! s:NumberToInt(number) abort
   return s:NewInt(l:dg, l:neg)
 endfunction
 
+" Valid number string patterns for all bases.
+let s:NUMBER_STRING_PATTERNS = map(split(s:DIGITS[1:], '\zs'),
+    \ '"^-\\=[" . (v:val =~# "\\d" ? "0-" : "0-9a-") . v:val . "]\\+$"')
+
 " Ensures that string represents a number in the given base. This 'Ensure' is
 " somewhat special in that it returns a different, lowercased string value.
 function! s:EnsureIsNumberString(string, base) abort
   let l:string = tolower(a:string)
-  let l:range = (a:base <= 10 ? '0-' : '0-9a-') . s:DIGITS[a:base-1]
-  if l:string =~# '^-\=[' . l:range . ']\+$'
+  if l:string =~# s:NUMBER_STRING_PATTERNS[a:base-2]
     return l:string
   endif
   throw maktaba#error#BadValue('Invalid number of base %d: "%s"', a:base, a:string)
 endfunction
 
-" Parses an Integer from the string in the given base and returns it.
+" Parses an Integer from the string in the given base and returns it. This
+" function assumes the string is a valid number string of the given base.
 function! s:ParseInt(string, base) abort
-  let l:string = s:EnsureIsNumberString(a:string, a:base)
-  if l:string[0] ==# '-'
+  if a:string[0] ==# '-'
     let l:neg = 1
-    let l:string = l:string[1:]
+    let l:string = a:string[1:]
   else
     let l:neg = 0
+    let l:string = a:string
   endif
   let l:ret = g:magnum#ZERO
   for i in range(len(l:string))
@@ -670,16 +674,19 @@ endfunction
 " Returns a new Integer given a number or string argument. This is the public
 " constructor for Integer objects.
 function! magnum#Int(arg, ...) abort
+  " The awkward control flow here is to present uncaught exceptions cleanly to
+  " the user, and especially to avoid showing a misleading E171 error.
   if maktaba#value#IsNumber(a:arg)
     return s:NumberToInt(a:arg)
-  elseif maktaba#value#IsString(a:arg)
-    let l:base = s:EnsureIsBase(maktaba#ensure#IsNumber(get(a:, 1, 10)))
-    return s:ParseInt(a:arg, l:base)
+  elseif !maktaba#value#IsString(a:arg)
+    throw maktaba#error#WrongType('Expected number or string argument')
   endif
-  throw maktaba#error#WrongType('Expected number or string argument')
+  let l:base = s:EnsureIsBase(maktaba#ensure#IsNumber(get(a:, 1, 10)))
+  let l:string = s:EnsureIsNumberString(a:arg, l:base)
+  return s:ParseInt(l:string, l:base)
 endfunction
 
-let s:MIN_INT = magnum#Int(-0x80000000)
+let s:MIN_INT = magnum#Int(0x80000000)
 let s:MAX_INT = magnum#Int(0x7fffffff)
 
 " Returns this Integer as a Vim number. This throws a ERROR(NumberOverflow)

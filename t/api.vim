@@ -285,6 +285,9 @@ describe "Integer.Pow"
     Expect x.Pow(1) to_be_equal x
     Expect x.Pow(2) to_be_equal magnum#Int(81)
     Expect x.Pow(3) to_be_equal magnum#Int(-729)
+    let n_1 = g:magnum#ONE.Neg()
+    Expect n_1.Pow(0x7ffffffe) to_be_equal g:magnum#ONE
+    Expect n_1.Pow(0x7fffffff) to_be_equal g:magnum#ONE.Neg()
   end
 
   it "throws exception for invalid argument"
@@ -344,5 +347,23 @@ describe "Integer.String"
     Expect b.String(36) ==# '-1qrw'
     let c = magnum#Int('43920284438948269')
     Expect c.String(10) ==# c.String()
+  end
+end
+
+describe "magnum"
+  it "passes the telephone game test"
+    let whisper = '10100110111110010011100001100001110010101011101110100001'
+    let secret = magnum#Int(whisper, 2)
+    Expect secret.String(2) ==# whisper
+
+    " Whisper the secret message along the chain of all bases.
+    let message = whisper
+    let chain = range(2, 36) + [2]
+    for i in range(len(chain)-1)
+      let heard = magnum#Int(message, chain[i])
+      Expect heard to_be_equal secret
+      let message = heard.String(chain[i+1])
+    endfor
+    Expect message ==# whisper
   end
 end

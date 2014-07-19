@@ -16,7 +16,7 @@ Complete documentation is available at [`:h magnum`][2].
 
 There are a couple of quick usage examples in the wiki, so you can
 [click through now][3] to get an impression of what working with
-magnum.vim might look like.
+magnum.vim looks like.
 
 [2]: https://github.com/glts/vim-magnum/blob/master/doc/magnum.txt
 [3]: https://github.com/glts/vim-magnum/wiki/Usage-examples
@@ -38,8 +38,8 @@ for you.
 
 For example, with [pathogen.vim][4] the installation goes:
 
-    git clone git://github.com/google/maktaba.git ~/.vim/bundle/maktaba
-    git clone git://github.com/glts/vim-magnum.git ~/.vim/bundle/magnum
+    git clone https://github.com/google/maktaba.git ~/.vim/bundle/maktaba
+    git clone https://github.com/glts/vim-magnum.git ~/.vim/bundle/magnum
 
 [4]: http://www.vim.org/scripts/script.php?script_id=2332
 
