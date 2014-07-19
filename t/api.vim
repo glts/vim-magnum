@@ -349,3 +349,21 @@ describe "Integer.String"
     Expect c.String(10) ==# c.String()
   end
 end
+
+describe "magnum"
+  it "passes the telephone game test"
+    let whisper = '10100110111110010011100001100001110010101011101110100001'
+    let secret = magnum#Int(whisper, 2)
+    Expect secret.String(2) ==# whisper
+
+    " Whisper the secret message along the chain of all bases.
+    let message = whisper
+    let chain = range(2, 36) + [2]
+    for i in range(len(chain)-1)
+      let heard = magnum#Int(message, chain[i])
+      Expect heard to_be_equal secret
+      let message = heard.String(chain[i+1])
+    endfor
+    Expect message ==# whisper
+  end
+end
