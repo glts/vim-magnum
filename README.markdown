@@ -7,7 +7,7 @@ arithmetic, and conversion operations.
 
 This plugin depends on Google's [Maktaba][1] library.
 
-[1]: https://github.com/google/maktaba
+[1]: https://github.com/google/vim-maktaba
 
 Usage
 -----
@@ -38,7 +38,7 @@ for you.
 
 For example, with [pathogen.vim][4] the installation goes:
 
-    git clone https://github.com/google/maktaba.git ~/.vim/bundle/maktaba
+    git clone https://github.com/google/vim-maktaba.git ~/.vim/bundle/maktaba
     git clone https://github.com/glts/vim-magnum.git ~/.vim/bundle/magnum
 
 [4]: http://www.vim.org/scripts/script.php?script_id=2332
