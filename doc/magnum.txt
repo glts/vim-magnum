@@ -5,9 +5,9 @@ License: Same terms as Vim itself (see |license|)
 
 DESCRIPTION					*magnum*
 
-Magnum is a big integer library implemented in Vim script.  It provides a
-small set of predicates, arithmetic, and conversion operations.  Also included
-is a simple random number generator.
+Magnum is a big integer library written in Vim script.  It provides a small
+set of predicates, arithmetic, and conversion operations.  It also includes a
+simple random number generator.
 
 Magnum has a lean user interface.  There is a single point of entry,
 |magnum#Int|, which accepts a number or a string and returns an Integer
