@@ -3,7 +3,8 @@ magnum.vim
 
 Magnum is a big integer library for Vim plugins written entirely in Vim
 script. Currently it provides just a small set of predicates,
-arithmetic, and conversion operations.
+arithmetic, and conversion operations. It also includes a simple random
+number generator.
 
 This plugin depends on Google's [Maktaba][1] library.
 
