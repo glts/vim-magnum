@@ -109,7 +109,7 @@ function.
 
 RANDOM INTEGERS					*magnum-random*
 
-The function |magnum#random#NextInt| generates pseudo-random Integer values
+The function |magnum#random#NextInt| produces pseudo-random Integer values
 within a range.
 
 						*magnum#random#NextInt*
@@ -124,7 +124,7 @@ magnum#random#NextInt({value})
 						*magnum#random#SetSeed*
 magnum#random#SetSeed({number})
 			Resets the state of the random number generator to the
-			state obtained from the seed {number}.
+			state obtained from seed {number}.
 			Throws |ERROR(WrongType)| when {number} is not a
 			number.
 
