@@ -5,12 +5,12 @@
 runtime autoload/magnum.vim
 
 function! SID() abort
-  redir => l:scripts
+  redir => l:scriptnames
   silent scriptnames
   redir END
-  for line in split(scripts, '\n')
+  for line in split(l:scriptnames, '\n')
     let [l:sid, l:path] = matchlist(line, '^\s*\(\d\+\):\s*\(.*\)$')[1:2]
-    if l:path =~# 'autoload/magnum\.vim$'
+    if l:path =~# '\<autoload[/\\]magnum\.vim$'
       return '<SNR>' . l:sid . '_'
     endif
   endfor

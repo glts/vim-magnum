@@ -1,7 +1,7 @@
 " magnum.vim - Pure Vim script big integer library
 " Author: glts <676c7473@gmail.com>
-" Version: 1.0.2
-" Date: 2014-07-19
+" Version: 1.1.0
+" Date: 2014-10-03
 "
 " The code in this library uses standard algorithms. I relied heavily on the
 " descriptions in the book 'BigNum math' (Syngress, 2006) and the accompanying
@@ -25,11 +25,6 @@
 " The code adopts some conventions (variable names, helper functions) from the
 " book. There is little commentary, but comments are used where there is
 " substantial difference from the book.
-
-let [s:plugin, s:enter] = maktaba#plugin#Enter(expand('<sfile>:p'))
-if !s:enter
-  finish
-endif
 
 let s:BASE = 16384
 let s:BITS = 14
@@ -724,8 +719,10 @@ endfunction
 
 " Constants
 
-" We use :lockvar without the bang. This protects the constant reference from
+" Use :lockvar without the bang. This protects the constant reference from
 " changing, but keeps the dicts open for extension (as for all Integers).
+" :unlockvar is needed to allow resourcing of this script.
+unlockvar magnum#ZERO magnum#ONE
 let magnum#ZERO = s:NewInt([], 0)
 let magnum#ONE = s:NewInt([1], 0)
 lockvar magnum#ZERO magnum#ONE
