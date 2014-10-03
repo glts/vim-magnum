@@ -29,7 +29,7 @@ magnum#Int({number})
 magnum#Int({string} [, {base}])
 			Creates a new Integer object.  The argument may be a
 			{number}, or a {string} representing a number.  An
-			optional {base} between 2 and 36 can be used to
+			optional {base} between 2 and 36 can be given to
 			specify the radix of {string}.  Default is base 10.
 
 			Throws |ERROR(WrongType)| for arguments of the wrong
@@ -93,7 +93,7 @@ Integer.Number()	Returns Integer as a Vim number.
 
 Integer.String([{base}])
 			Returns Integer as a string.  An optional {base}
-			between 2 and 36 can be used to specify the radix of
+			between 2 and 36 can be given to specify the radix of
 			the string representation.  Default is base 10.
 			Throws |ERROR(WrongType)| when {base} is not a number.
 			Throws |ERROR(BadValue)| for invalid {base}.
@@ -124,7 +124,7 @@ magnum#random#NextInt({value})
 						*magnum#random#SetSeed*
 magnum#random#SetSeed({number})
 			Resets the state of the random number generator to the
-			state obtained from seed {number}.
+			state derived from seed {number}.
 			Throws |ERROR(WrongType)| when {number} is not a
 			number.
 
