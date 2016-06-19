@@ -13,8 +13,6 @@ Magnum has a lean user interface.  There is a single point of entry,
 |magnum#Int|, which accepts a number or a string and returns an Integer
 object.  All further interaction happens with such Integer objects.
 
-This plugin requires the |Maktaba| library.
-
 INTEGERS					*magnum-Integer*
 
 "Integer" is the name given to the immutable multiple-precision integer data
