@@ -135,9 +135,9 @@ endfunction
 function! magnum#random#NextInt(val) abort
   if type(a:val) != type({}) || !has_key(a:val, '_dg')
     " This check is duplicated from magnum.vim, unfortunately.
-    throw maktaba#error#WrongType('Argument of magnum#random#NextInt must be Integer')
+    throw 'magnum: Argument of magnum#random#NextInt must be Integer'
   elseif !a:val.IsPositive()
-    throw maktaba#error#BadValue('Expected positive Integer, got %s', a:val.String())
+    throw printf('magnum: Expected positive Integer, got %s', a:val.String())
   endif
 
   " magnum#Int(0) is a hack. As there is no way to access the s:NewInt factory
@@ -164,7 +164,10 @@ endfunction
 " Resets the state of the random number generator to the state obtained from
 " the given number, which must be a Vim number.
 function! magnum#random#SetSeed(number) abort
-  call s:XsaddInit(maktaba#ensure#IsNumber(a:number))
+  if type(a:number) != type(0)
+    throw 'magnum: Argument of magnum#random#SetSeed must be number'
+  endif
+  call s:XsaddInit(a:number)
 endfunction
 
 " Seed using shuffled time and pid. Nothing serious, but given the range of

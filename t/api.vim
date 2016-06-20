@@ -19,8 +19,8 @@ describe "magnum#Int"
     Expect expr { magnum#Int(14) } not to_throw
     Expect expr { magnum#Int('14') } not to_throw
     Expect expr { magnum#Int('14', 16) } not to_throw
-    Expect expr { magnum#Int({}) } to_throw 'ERROR(WrongType)'
-    Expect expr { magnum#Int(3.14) } to_throw 'ERROR(WrongType)'
+    Expect expr { magnum#Int({}) } to_throw
+    Expect expr { magnum#Int(3.14) } to_throw
   end
 end
 
@@ -122,8 +122,8 @@ describe "Integer.Add"
   end
 
   it "throws exception when passed wrong argument"
-    Expect expr { magnum#Int(10).Add('invalid') } to_throw 'ERROR(WrongType)'
-    Expect expr { magnum#Int(10).Add(0.1) } to_throw 'ERROR(WrongType)'
+    Expect expr { magnum#Int(10).Add('invalid') } to_throw
+    Expect expr { magnum#Int(10).Add(0.1) } to_throw
   end
 end
 
@@ -170,8 +170,8 @@ describe "Integer.Sub"
   end
 
   it "throws exception when passed wrong argument"
-    Expect expr { magnum#Int(10).Sub([]) } to_throw 'ERROR(WrongType)'
-    Expect expr { magnum#Int(10).Sub('invalid') } to_throw 'ERROR(WrongType)'
+    Expect expr { magnum#Int(10).Sub([]) } to_throw
+    Expect expr { magnum#Int(10).Sub('invalid') } to_throw
   end
 end
 
@@ -201,8 +201,8 @@ describe "Integer.Mul"
   end
 
   it "throws exception when passed wrong argument"
-    Expect expr { magnum#Int(8).Mul(99) } to_throw 'ERROR(WrongType)'
-    Expect expr { magnum#Int(8).Mul([]) } to_throw 'ERROR(WrongType)'
+    Expect expr { magnum#Int(8).Mul(99) } to_throw
+    Expect expr { magnum#Int(8).Mul([]) } to_throw
   end
 end
 
@@ -220,9 +220,9 @@ describe "Integer.DivRem"
 
   it "throws exception on division by zero"
     let x = magnum#Int(5)
-    Expect expr { g:magnum#ZERO.DivRem(g:magnum#ZERO) } to_throw 'ERROR(BadValue)'
-    Expect expr { x.DivRem(g:magnum#ZERO) } to_throw 'ERROR(BadValue)'
-    Expect expr { x.Neg().DivRem(g:magnum#ZERO) } to_throw 'ERROR(BadValue)'
+    Expect expr { g:magnum#ZERO.DivRem(g:magnum#ZERO) } to_throw
+    Expect expr { x.DivRem(g:magnum#ZERO) } to_throw
+    Expect expr { x.Neg().DivRem(g:magnum#ZERO) } to_throw
   end
 
   it "handles sign correctly"
@@ -291,9 +291,9 @@ describe "Integer.Pow"
   end
 
   it "throws exception for invalid argument"
-    Expect expr { magnum#Int(3).Pow(g:magnum#ONE) } to_throw 'ERROR(WrongType)'
-    Expect expr { magnum#Int(3).Pow({'invalid': 1}) } to_throw 'ERROR(WrongType)'
-    Expect expr { magnum#Int(3).Pow(-1) } to_throw 'ERROR(BadValue)'
+    Expect expr { magnum#Int(3).Pow(g:magnum#ONE) } to_throw
+    Expect expr { magnum#Int(3).Pow({'invalid': 1}) } to_throw
+    Expect expr { magnum#Int(3).Pow(-1) } to_throw
   end
 end
 
@@ -309,20 +309,20 @@ describe "Integer.Number"
   end
 
   it "throws exception on integer overflow"
-    Expect expr { magnum#Int('10000000000').Number() } to_throw 'ERROR(NumberOverflow)'
-    Expect expr { magnum#Int('2200000000').Number() } to_throw 'ERROR(NumberOverflow)'
-    Expect expr { magnum#Int('2147483649').Number() } to_throw 'ERROR(NumberOverflow)'
-    Expect expr { magnum#Int('2147483648').Number() } to_throw 'ERROR(NumberOverflow)'
+    Expect expr { magnum#Int('10000000000').Number() } to_throw
+    Expect expr { magnum#Int('2200000000').Number() } to_throw
+    Expect expr { magnum#Int('2147483649').Number() } to_throw
+    Expect expr { magnum#Int('2147483648').Number() } to_throw
     Expect magnum#Int('2147483647').Number() == 2147483647
     Expect magnum#Int('2147483646').Number() == 2147483646
     Expect magnum#Int('2147483639').Number() == 2147483639
     Expect magnum#Int('-2147483639').Number() == -2147483639
     Expect magnum#Int('-2147483647').Number() == -2147483647
     Expect magnum#Int('-2147483648').Number() == -2147483648
-    Expect expr { magnum#Int('-2147483649').Number() } to_throw 'ERROR(NumberOverflow)'
-    Expect expr { magnum#Int('-2147483650').Number() } to_throw 'ERROR(NumberOverflow)'
-    Expect expr { magnum#Int('-2150000000').Number() } to_throw 'ERROR(NumberOverflow)'
-    Expect expr { magnum#Int('-99999999999999').Number() } to_throw 'ERROR(NumberOverflow)'
+    Expect expr { magnum#Int('-2147483649').Number() } to_throw
+    Expect expr { magnum#Int('-2147483650').Number() } to_throw
+    Expect expr { magnum#Int('-2150000000').Number() } to_throw
+    Expect expr { magnum#Int('-99999999999999').Number() } to_throw
   end
 end
 
@@ -339,11 +339,11 @@ describe "Integer.String"
   it "accepts base argument"
     let a = magnum#Int(81356)
     let b = magnum#Int(-81356)
-    Expect expr { a.String('16') } to_throw 'ERROR(WrongType)'
-    Expect expr { a.String(16) } not to_throw 'ERROR(WrongType)'
+    Expect expr { a.String('16') } to_throw
+    Expect expr { a.String(16) } not to_throw
     Expect a.String(16) ==# '13dcc'
-    Expect expr { b.String(37) } to_throw 'ERROR(BadValue)'
-    Expect expr { b.String(36) } not to_throw 'ERROR(BadValue)'
+    Expect expr { b.String(37) } to_throw
+    Expect expr { b.String(36) } not to_throw
     Expect b.String(36) ==# '-1qrw'
     let c = magnum#Int('43920284438948269')
     Expect c.String(10) ==# c.String()

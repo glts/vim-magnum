@@ -224,12 +224,12 @@ describe "magnum#random#NextInt"
   end
 
   it "throws exception when passed wrong argument"
-    Expect expr { magnum#random#NextInt({'too': 0xBAD}) } to_throw 'ERROR(WrongType)'
-    Expect expr { magnum#random#NextInt(1) } to_throw 'ERROR(WrongType)'
+    Expect expr { magnum#random#NextInt({'too': 0xBAD}) } to_throw
+    Expect expr { magnum#random#NextInt(1) } to_throw
     Expect expr { magnum#random#NextInt(g:magnum#ONE) } not to_throw
 
-    Expect expr { magnum#random#NextInt(magnum#Int(83).Neg()) } to_throw 'ERROR(BadValue)'
-    Expect expr { magnum#random#NextInt(g:magnum#ZERO) } to_throw 'ERROR(BadValue)'
+    Expect expr { magnum#random#NextInt(magnum#Int(83).Neg()) } to_throw
+    Expect expr { magnum#random#NextInt(g:magnum#ZERO) } to_throw
   end
 end
 
@@ -244,7 +244,7 @@ describe "magnum#random#SetSeed"
   end
 
   it "throws exception when passed wrong argument"
-    Expect expr { magnum#random#SetSeed('nil') } to_throw 'ERROR(WrongType)'
-    Expect expr { magnum#random#SetSeed(g:magnum#ONE) } to_throw 'ERROR(WrongType)'
+    Expect expr { magnum#random#SetSeed('nil') } to_throw
+    Expect expr { magnum#random#SetSeed(g:magnum#ONE) } to_throw
   end
 end
