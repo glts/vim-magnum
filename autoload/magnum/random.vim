@@ -121,9 +121,9 @@ function! s:IsInRange(limit, x) abort
   return 0
 endfunction
 
-" Removes trailing zeroes in magnitude dg. Similar to the function in magnum.vim
+" Removes trailing zeros in magnitude dg. Similar to the function in magnum.vim
 " but simpler, since it is unlikely that the loop is entered more than once.
-function! s:TrimZeroes(dg) abort
+function! s:TrimZeros(dg) abort
   while !empty(a:dg) && a:dg[-1] == 0
     call remove(a:dg, -1)
   endwhile
@@ -135,9 +135,9 @@ endfunction
 function! magnum#random#NextInt(val) abort
   if type(a:val) != type({}) || !has_key(a:val, '_dg')
     " This check is duplicated from magnum.vim, unfortunately.
-    throw maktaba#error#WrongType('Argument of magnum#random#NextInt must be Integer')
+    throw 'magnum: Argument of magnum#random#NextInt must be Integer'
   elseif !a:val.IsPositive()
-    throw maktaba#error#BadValue('Expected positive Integer, got %s', a:val.String())
+    throw printf('magnum: Expected positive Integer, got %s', a:val.String())
   endif
 
   " magnum#Int(0) is a hack. As there is no way to access the s:NewInt factory
@@ -155,7 +155,7 @@ function! magnum#random#NextInt(val) abort
     endfor
     let l:dg[-1] = s:BitRsh(s:XsaddNextInt(), s:BITS - l:nbits)
     if s:IsInRange(a:val._dg, l:dg)
-      let l:ret._dg = s:TrimZeroes(l:dg)
+      let l:ret._dg = s:TrimZeros(l:dg)
       return l:ret
     endif
   endwhile
@@ -164,7 +164,10 @@ endfunction
 " Resets the state of the random number generator to the state obtained from
 " the given number, which must be a Vim number.
 function! magnum#random#SetSeed(number) abort
-  call s:XsaddInit(maktaba#ensure#IsNumber(a:number))
+  if type(a:number) != type(0)
+    throw 'magnum: Argument of magnum#random#SetSeed must be number'
+  endif
+  call s:XsaddInit(a:number)
 endfunction
 
 " Seed using shuffled time and pid. Nothing serious, but given the range of

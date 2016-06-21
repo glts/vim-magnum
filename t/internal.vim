@@ -46,20 +46,20 @@ describe "s:NewInt"
   end
 end
 
-describe "s:TrimZeroes"
+describe "s:TrimZeros"
   it "passes basic test"
     let x = Call('s:NewInt', [0, 1, 2], 0)
     let x1 = Call('s:NewInt', [0, 1, 2, 0], 0)
     let x2 = Call('s:NewInt', [0, 1, 2, 0, 0, 0, 0], 0)
-    Expect Call('s:TrimZeroes', deepcopy(x)) to_be_equal x
-    Expect Call('s:TrimZeroes', deepcopy(x1)) to_be_equal x
-    Expect Call('s:TrimZeroes', deepcopy(x2)) to_be_equal x
+    Expect Call('s:TrimZeros', deepcopy(x)) to_be_equal x
+    Expect Call('s:TrimZeros', deepcopy(x1)) to_be_equal x
+    Expect Call('s:TrimZeros', deepcopy(x2)) to_be_equal x
     let y = Call('s:NewInt', [1], 1)
     let y1 = Call('s:NewInt', [1, 0], 1)
     let y2 = Call('s:NewInt', [1, 0, 0, 0, 0, 0], 1)
-    Expect Call('s:TrimZeroes', deepcopy(y)) to_be_equal y
-    Expect Call('s:TrimZeroes', deepcopy(y1)) to_be_equal y
-    Expect Call('s:TrimZeroes', deepcopy(y2)) to_be_equal y
+    Expect Call('s:TrimZeros', deepcopy(y)) to_be_equal y
+    Expect Call('s:TrimZeros', deepcopy(y1)) to_be_equal y
+    Expect Call('s:TrimZeros', deepcopy(y2)) to_be_equal y
   end
 
   it "normalises zero representations"
@@ -69,12 +69,12 @@ describe "s:TrimZeroes"
     let z4 = Call('s:NewInt', [], 1)
     let z5 = Call('s:NewInt', [0], 1)
     let z6 = Call('s:NewInt', [0, 0, 0], 1)
-    Expect Call('s:TrimZeroes', z1) to_be_zero
-    Expect Call('s:TrimZeroes', z2) to_be_zero
-    Expect Call('s:TrimZeroes', z3) to_be_zero
-    Expect Call('s:TrimZeroes', z4) to_be_zero
-    Expect Call('s:TrimZeroes', z5) to_be_zero
-    Expect Call('s:TrimZeroes', z6) to_be_zero
+    Expect Call('s:TrimZeros', z1) to_be_zero
+    Expect Call('s:TrimZeros', z2) to_be_zero
+    Expect Call('s:TrimZeros', z3) to_be_zero
+    Expect Call('s:TrimZeros', z4) to_be_zero
+    Expect Call('s:TrimZeros', z5) to_be_zero
+    Expect Call('s:TrimZeros', z6) to_be_zero
   end
 end
 

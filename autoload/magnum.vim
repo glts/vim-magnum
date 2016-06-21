@@ -1,7 +1,7 @@
 " magnum.vim - Pure Vim script big integer library
 " Author: glts <676c7473@gmail.com>
-" Version: 1.1.0
-" Date: 2014-10-03
+" Version: 2.0.0
+" Date: 2016-06-21
 "
 " The code in this library uses standard algorithms. I relied heavily on the
 " descriptions in the book 'BigNum math' (Syngress, 2006) and the accompanying
@@ -42,7 +42,7 @@ function! s:EnsureIsInt(val, funcname) abort
   if type(a:val) == type({}) && has_key(a:val, '_dg')
     return a:val
   endif
-  throw maktaba#error#WrongType('Argument of Integer.%s must be Integer', a:funcname)
+  throw printf('magnum: Argument of Integer.%s must be Integer', a:funcname)
 endfunction
 
 " Returns true if this Integer is the value zero, false otherwise.
@@ -118,9 +118,9 @@ function! magnum#Neg() dict abort
   return self.IsZero() ? self : s:NewInt(self._dg, !self._neg)
 endfunction
 
-" Removes trailing zeroes in the magnitude of Integer x. This is necessary
-" when the Integer has ended up in a non-canonical form. Mutates x in place.
-function! s:TrimZeroes(x) abort
+" Removes trailing zeros in the magnitude of Integer x. This is necessary when
+" the Integer has ended up in a non-canonical form. Mutates x in place.
+function! s:TrimZeros(x) abort
   let l:dg = a:x._dg
   if !empty(l:dg) && l:dg[-1] == 0
     let i = len(l:dg) - 2
@@ -192,7 +192,7 @@ function! s:Sub(a, b) abort
     endfor
   endif
   let l:ret = s:NewInt(l:dg, 0)
-  return s:TrimZeroes(l:ret)
+  return s:TrimZeros(l:ret)
 endfunction
 
 " Returns the sum of this Integer and val.
@@ -249,7 +249,7 @@ function! s:MulBasic(a, b) abort
     let l:dg[i+l:lenb] = l:u
   endfor
   let l:ret = s:NewInt(l:dg, 0)
-  return s:TrimZeroes(l:ret)
+  return s:TrimZeros(l:ret)
 endfunction
 
 " Returns a new non-negative Integer that is the product of Integers a and b.
@@ -269,7 +269,7 @@ function! s:MulComba(a, b) abort
     let l:w = l:w / s:BASE
   endfor
   let l:ret = s:NewInt(l:dg, 0)
-  return s:TrimZeroes(l:ret)
+  return s:TrimZeros(l:ret)
 endfunction
 
 " Returns the product of this Integer and val.
@@ -290,7 +290,7 @@ endfunction
 " Left-shift Integer x by b digits. Equivalent to multiplication with
 " s:BASE^b. This function assumes b >= 0, mutates x in place, ignores sign.
 function! s:LshDigits(x, b) abort
-  " Own algorithm: simply prepend b zeroes to the magnitude.
+  " Own algorithm: simply prepend b zeros to the magnitude.
   if a:b > 0 && !a:x.IsZero()
     call extend(a:x._dg, repeat([0], a:b), 0)
   endif
@@ -352,7 +352,7 @@ function! s:Rsh(x, b) abort
       let l:r = l:tmp
     endfor
   endif
-  return s:TrimZeroes(a:x)
+  return s:TrimZeros(a:x)
 endfunction
 
 " Returns a new non-negative Integer that is the product of a and b. Here a is
@@ -369,7 +369,7 @@ function! s:MulDigit(a, b) abort
     call add(l:dg, l:u)
   endif
   let l:ret = s:NewInt(l:dg, 0)
-  return s:TrimZeroes(l:ret)
+  return s:TrimZeros(l:ret)
 endfunction
 
 " Divides Integer a by b and returns the resulting [quotient, remainder].
@@ -388,7 +388,7 @@ function! s:DivRemDigit(a, b) abort
     endif
   endfor
   let l:q = s:NewInt(l:dg, 0)
-  call s:TrimZeroes(l:q)
+  call s:TrimZeros(l:q)
   return [l:q, l:r]
 endfunction
 
@@ -396,7 +396,7 @@ endfunction
 " [quotient, remainder]. This is the high-level signed division function.
 function! s:DivRem(a, b) abort
   if a:b.IsZero()
-    throw maktaba#error#BadValue('Division by zero')
+    throw 'magnum: Division by zero'
   endif
   if s:Compare(a:a, a:b) < 0
     return [g:magnum#ZERO, a:a]
@@ -468,7 +468,7 @@ function! s:DivRem(a, b) abort
 
   " Finalise the result pair. Shift the remainder back l:norm places.
   let l:q = s:NewInt(l:dg, a:a._neg != a:b._neg)
-  call s:TrimZeroes(l:q)
+  call s:TrimZeros(l:q)
   let l:r = s:Rsh(l:x, l:norm)
   if !l:r.IsZero()
     let l:r._neg = a:a._neg
@@ -495,11 +495,13 @@ function! magnum#DivRem(val) dict abort
   return s:DivRem(self, a:val)
 endfunction
 
-function! s:EnsureIsPositiveOrZero(number) abort
-  if a:number >= 0
+function! s:EnsureIsPositiveOrZeroExponent(number) abort
+  if type(a:number) != type(0)
+    throw 'magnum: Argument of Integer.Pow must be number'
+  elseif a:number >= 0
     return a:number
   endif
-  throw maktaba#error#BadValue('Expected positive number or zero, got %d', a:number)
+  throw printf('magnum: Expected positive number or zero, got %d', a:number)
 endfunction
 
 " Returns a new Integer that is the square of Integer x.
@@ -518,7 +520,7 @@ function! s:SqrBasic(x) abort
     let l:dg[i+l:lenx] = l:u
   endfor
   let l:ret = s:NewInt(l:dg, 0)
-  return s:TrimZeroes(l:ret)
+  return s:TrimZeros(l:ret)
 endfunction
 
 " Returns a new Integer that is the square of Integer x. Comba algorithm.
@@ -543,7 +545,7 @@ function! s:SqrComba(x) abort
     let l:w1 = l:w / s:BASE
   endfor
   let l:ret = s:NewInt(l:dg, 0)
-  return s:TrimZeroes(l:ret)
+  return s:TrimZeros(l:ret)
 endfunction
 
 " Returns a new Integer that is the square of Integer x (x^2).
@@ -559,7 +561,7 @@ endfunction
 " Returns this Integer raised to the power of number. The argument is a Vim
 " number, not an Integer.
 function! magnum#Pow(number) dict abort
-  let l:n = s:EnsureIsPositiveOrZero(maktaba#ensure#IsNumber(a:number))
+  let l:n = s:EnsureIsPositiveOrZeroExponent(a:number)
   let l:bits = []
   while l:n != 0
     call insert(l:bits, l:n % 2)
@@ -612,10 +614,12 @@ function! s:NewInt(dg, neg) abort
 endfunction
 
 function! s:EnsureIsBase(number) abort
-  if 2 <= a:number && a:number <= 36
+  if type(a:number) != type(0)
+    throw 'magnum: Base argument must be number'
+  elseif 2 <= a:number && a:number <= 36
     return a:number
   endif
-  throw maktaba#error#BadValue('Expected base between 2 and 36, got %d', a:number)
+  throw printf('magnum: Expected base between 2 and 36, got %d', a:number)
 endfunction
 
 " Creates a new Integer from number.
@@ -641,7 +645,7 @@ function! s:EnsureIsNumberString(string, base) abort
   if l:string =~# s:NUMBER_STRING_PATTERNS[a:base-2]
     return l:string
   endif
-  throw maktaba#error#BadValue('Invalid number of base %d: "%s"', a:base, a:string)
+  throw printf('magnum: Invalid number of base %d: "%s"', a:base, a:string)
 endfunction
 
 " Parses an Integer from the string in the given base and returns it. This
@@ -671,12 +675,12 @@ endfunction
 function! magnum#Int(arg, ...) abort
   " The awkward control flow here is to present uncaught exceptions cleanly to
   " the user, and especially to avoid showing a misleading E171 error.
-  if maktaba#value#IsNumber(a:arg)
+  if type(a:arg) == type(0)
     return s:NumberToInt(a:arg)
-  elseif !maktaba#value#IsString(a:arg)
-    throw maktaba#error#WrongType('Expected number or string argument')
+  elseif type(a:arg) != type('')
+    throw 'magnum: Expected number or string argument'
   endif
-  let l:base = s:EnsureIsBase(maktaba#ensure#IsNumber(get(a:, 1, 10)))
+  let l:base = s:EnsureIsBase(get(a:, 1, 10))
   let l:string = s:EnsureIsNumberString(a:arg, l:base)
   return s:ParseInt(l:string, l:base)
 endfunction
@@ -684,8 +688,8 @@ endfunction
 let s:MIN_INT = magnum#Int(0x80000000)
 let s:MAX_INT = magnum#Int(0x7fffffff)
 
-" Returns this Integer as a Vim number. This throws a ERROR(NumberOverflow)
-" exception when the Integer doesn't fit in a signed int32.
+" Returns this Integer as a Vim number. This throws an overflow exception when
+" the Integer doesn't fit in a signed int32.
 function! magnum#Number() dict abort
   if self.Cmp(s:MIN_INT) >= 0 && self.Cmp(s:MAX_INT) <= 0
     let l:n = 0
@@ -697,13 +701,13 @@ function! magnum#Number() dict abort
     endfor
     return self._neg ? l:n : -l:n
   endif
-  throw maktaba#error#Message('NumberOverflow', 'Integer too large')
+  throw 'magnum: Integer overflow'
 endfunction
 
 " Returns this Integer as a string. The optional argument should be a number
 " between 2 and 36 specifying the desired base.
 function! magnum#String(...) dict abort
-  let l:base = s:EnsureIsBase(maktaba#ensure#IsNumber(get(a:, 1, 10)))
+  let l:base = s:EnsureIsBase(get(a:, 1, 10))
   if self.IsZero()
     return '0'
   endif

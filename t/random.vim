@@ -212,10 +212,10 @@ describe "magnum#random#NextInt"
     endfor
   end
 
-  it "trims trailing zeroes in result"
+  it "trims trailing zeros in result"
     " Given the magnum#random#NextInt algorithm, this sequence of invocations
     " would result in the digit lists [15514, 0], [15934, 0], [2309, 0], all
-    " with trailing zero. These zeroes must not be in the result Integers.
+    " with trailing zero. These zeros must not be in the result Integers.
     call magnum#random#SetSeed(45678)
     let n = magnum#Int(16389)
     Expect magnum#random#NextInt(n)._dg == [15514]
@@ -224,12 +224,12 @@ describe "magnum#random#NextInt"
   end
 
   it "throws exception when passed wrong argument"
-    Expect expr { magnum#random#NextInt({'too': 0xBAD}) } to_throw 'ERROR(WrongType)'
-    Expect expr { magnum#random#NextInt(1) } to_throw 'ERROR(WrongType)'
+    Expect expr { magnum#random#NextInt({'too': 0xBAD}) } to_throw
+    Expect expr { magnum#random#NextInt(1) } to_throw
     Expect expr { magnum#random#NextInt(g:magnum#ONE) } not to_throw
 
-    Expect expr { magnum#random#NextInt(magnum#Int(83).Neg()) } to_throw 'ERROR(BadValue)'
-    Expect expr { magnum#random#NextInt(g:magnum#ZERO) } to_throw 'ERROR(BadValue)'
+    Expect expr { magnum#random#NextInt(magnum#Int(83).Neg()) } to_throw
+    Expect expr { magnum#random#NextInt(g:magnum#ZERO) } to_throw
   end
 end
 
@@ -244,7 +244,7 @@ describe "magnum#random#SetSeed"
   end
 
   it "throws exception when passed wrong argument"
-    Expect expr { magnum#random#SetSeed('nil') } to_throw 'ERROR(WrongType)'
-    Expect expr { magnum#random#SetSeed(g:magnum#ONE) } to_throw 'ERROR(WrongType)'
+    Expect expr { magnum#random#SetSeed('nil') } to_throw
+    Expect expr { magnum#random#SetSeed(g:magnum#ONE) } to_throw
   end
 end
