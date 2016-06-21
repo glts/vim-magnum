@@ -30,13 +30,13 @@ magnum#Int({string} [, {base}])
 			optional {base} between 2 and 36 can be given to
 			specify the radix of {string}.  Default is base 10.
 
-			Throws |ERROR(WrongType)| for arguments of the wrong
-			type.
-			Throws |ERROR(BadValue)| for invalid {base}, and for
-			a {string} that cannot be parsed.
+			Throws an exception for arguments of the wrong type,
+			invalid {base}, and for a {string} that cannot be
+			parsed.
 
 In the following, {value} represents an Integer argument.  All methods throw
-|ERROR(WrongType)| when passed an argument other than an Integer.
+an exception when passed an argument other than an Integer.  For purposes of
+catching, all exception values are prefixed with "magnum:".
 
 Predicates ~
 
@@ -66,22 +66,21 @@ Integer.Mul({value})	Returns the product of Integer and {value}, x * y.
 
 Integer.Div({value})	Divides Integer by {value} and returns the quotient,
 			x / y.
-			Throws |ERROR(BadValue)| on division by zero.
+			Throws an exception on division by zero.
 
 Integer.Rem({value})	Divides Integer by {value} and returns the remainder,
 			x % y.
-			Throws |ERROR(BadValue)| on division by zero.
+			Throws an exception on division by zero.
 
 Integer.DivRem({value})
 			Divides Integer by {value} and returns the pair
 			[quotient, remainder].
-			Throws |ERROR(BadValue)| on division by zero.
+			Throws an exception on division by zero.
 
 Integer.Pow({number})	Raises Integer to the power of {number}, which must be
 			a number, and returns the result, x^y.
-			Throws |ERROR(WrongType)| when {number} is not a
-			number.
-			Throws |ERROR(BadValue)| when {number} is negative.
+			Throws an exception when {number} is not a number, and
+			when {number} is negative.
 
 Accessor methods ~
 
@@ -93,8 +92,8 @@ Integer.String([{base}])
 			Returns Integer as a string.  An optional {base}
 			between 2 and 36 can be given to specify the radix of
 			the string representation.  Default is base 10.
-			Throws |ERROR(WrongType)| when {base} is not a number.
-			Throws |ERROR(BadValue)| for invalid {base}.
+			Throws an exception when {base} is not a number, and
+			for invalid {base}.
 
 Constants ~
 						*magnum#ZERO*
@@ -115,15 +114,13 @@ magnum#random#NextInt({value})
 			Returns a new, randomly generated Integer between zero
 			inclusive and Integer {value} exclusive.  The given
 			{value} must be positive.
-			Throws |ERROR(WrongType)| when {value} is not an
-			Integer.
-			Throws |ERROR(BadValue)| when {value} is not positive.
+			Throws an exception when {value} is not an Integer,
+			and when {value} is not positive.
 
 						*magnum#random#SetSeed*
 magnum#random#SetSeed({number})
 			Resets the state of the random number generator to the
 			state derived from seed {number}.
-			Throws |ERROR(WrongType)| when {number} is not a
-			number.
+			Throws an exception when {number} is not a number.
 
  vim:tw=78:ts=8:ft=help:norl:
