@@ -22,6 +22,10 @@ describe "magnum#Int"
     call StartTime()
   end
 
+  after
+    call StopAndReportTime()
+  end
+
   it "instantiates 10000 Integers from number"
     for i in range(5000)
       let _ = magnum#Int(123)
@@ -34,15 +38,15 @@ describe "magnum#Int"
       let _ = magnum#Int('9012345')
     endfor
   end
-
-  after
-    call StopAndReportTime()
-  end
 end
 
 describe "Integer.Cmp"
   before
     call StartTime()
+  end
+
+  after
+    call StopAndReportTime()
   end
 
   it "compares 10000 equal Integers"
@@ -76,15 +80,15 @@ describe "Integer.Cmp"
       let _ = x.Cmp(y)
     endfor
   end
-
-  after
-    call StopAndReportTime()
-  end
 end
 
 describe "Integer.Add"
   before
     call StartTime()
+  end
+
+  after
+    call StopAndReportTime()
   end
 
   it "adds 10000 small Integers"
@@ -104,15 +108,15 @@ describe "Integer.Add"
       let _ = x.Add(y)
     endfor
   end
-
-  after
-    call StopAndReportTime()
-  end
 end
 
 describe "Integer.Mul"
   before
     call StartTime()
+  end
+
+  after
+    call StopAndReportTime()
   end
 
   it "multiplies 10000 small Integers"
@@ -130,15 +134,15 @@ describe "Integer.Mul"
       let _ = x.Mul(y)
     endfor
   end
-
-  after
-    call StopAndReportTime()
-  end
 end
 
 describe "Integer.DivRem"
   before
     call StartTime()
+  end
+
+  after
+    call StopAndReportTime()
   end
 
   it "divides 10000 small Integers"
@@ -156,15 +160,15 @@ describe "Integer.DivRem"
       let _ = x.DivRem(y)
     endfor
   end
-
-  after
-    call StopAndReportTime()
-  end
 end
 
 describe "Integer.Pow"
   before
     call StartTime()
+  end
+
+  after
+    call StopAndReportTime()
   end
 
   it "raises to 1000 small powers"
@@ -180,15 +184,15 @@ describe "Integer.Pow"
       let _ = x.Pow(31)
     endfor
   end
-
-  after
-    call StopAndReportTime()
-  end
 end
 
 describe "Integer.String"
   before
     call StartTime()
+  end
+
+  after
+    call StopAndReportTime()
   end
 
   it "converts 2000 small Integers to decimal string"
@@ -203,9 +207,5 @@ describe "Integer.String"
     for i in range(1000)
       let _ = x.String()
     endfor
-  end
-
-  after
-    call StopAndReportTime()
   end
 end
