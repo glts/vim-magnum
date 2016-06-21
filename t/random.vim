@@ -212,10 +212,10 @@ describe "magnum#random#NextInt"
     endfor
   end
 
-  it "trims trailing zeroes in result"
+  it "trims trailing zeros in result"
     " Given the magnum#random#NextInt algorithm, this sequence of invocations
     " would result in the digit lists [15514, 0], [15934, 0], [2309, 0], all
-    " with trailing zero. These zeroes must not be in the result Integers.
+    " with trailing zero. These zeros must not be in the result Integers.
     call magnum#random#SetSeed(45678)
     let n = magnum#Int(16389)
     Expect magnum#random#NextInt(n)._dg == [15514]

@@ -118,9 +118,9 @@ function! magnum#Neg() dict abort
   return self.IsZero() ? self : s:NewInt(self._dg, !self._neg)
 endfunction
 
-" Removes trailing zeroes in the magnitude of Integer x. This is necessary
-" when the Integer has ended up in a non-canonical form. Mutates x in place.
-function! s:TrimZeroes(x) abort
+" Removes trailing zeros in the magnitude of Integer x. This is necessary when
+" the Integer has ended up in a non-canonical form. Mutates x in place.
+function! s:TrimZeros(x) abort
   let l:dg = a:x._dg
   if !empty(l:dg) && l:dg[-1] == 0
     let i = len(l:dg) - 2
@@ -192,7 +192,7 @@ function! s:Sub(a, b) abort
     endfor
   endif
   let l:ret = s:NewInt(l:dg, 0)
-  return s:TrimZeroes(l:ret)
+  return s:TrimZeros(l:ret)
 endfunction
 
 " Returns the sum of this Integer and val.
@@ -249,7 +249,7 @@ function! s:MulBasic(a, b) abort
     let l:dg[i+l:lenb] = l:u
   endfor
   let l:ret = s:NewInt(l:dg, 0)
-  return s:TrimZeroes(l:ret)
+  return s:TrimZeros(l:ret)
 endfunction
 
 " Returns a new non-negative Integer that is the product of Integers a and b.
@@ -269,7 +269,7 @@ function! s:MulComba(a, b) abort
     let l:w = l:w / s:BASE
   endfor
   let l:ret = s:NewInt(l:dg, 0)
-  return s:TrimZeroes(l:ret)
+  return s:TrimZeros(l:ret)
 endfunction
 
 " Returns the product of this Integer and val.
@@ -290,7 +290,7 @@ endfunction
 " Left-shift Integer x by b digits. Equivalent to multiplication with
 " s:BASE^b. This function assumes b >= 0, mutates x in place, ignores sign.
 function! s:LshDigits(x, b) abort
-  " Own algorithm: simply prepend b zeroes to the magnitude.
+  " Own algorithm: simply prepend b zeros to the magnitude.
   if a:b > 0 && !a:x.IsZero()
     call extend(a:x._dg, repeat([0], a:b), 0)
   endif
@@ -352,7 +352,7 @@ function! s:Rsh(x, b) abort
       let l:r = l:tmp
     endfor
   endif
-  return s:TrimZeroes(a:x)
+  return s:TrimZeros(a:x)
 endfunction
 
 " Returns a new non-negative Integer that is the product of a and b. Here a is
@@ -369,7 +369,7 @@ function! s:MulDigit(a, b) abort
     call add(l:dg, l:u)
   endif
   let l:ret = s:NewInt(l:dg, 0)
-  return s:TrimZeroes(l:ret)
+  return s:TrimZeros(l:ret)
 endfunction
 
 " Divides Integer a by b and returns the resulting [quotient, remainder].
@@ -388,7 +388,7 @@ function! s:DivRemDigit(a, b) abort
     endif
   endfor
   let l:q = s:NewInt(l:dg, 0)
-  call s:TrimZeroes(l:q)
+  call s:TrimZeros(l:q)
   return [l:q, l:r]
 endfunction
 
@@ -468,7 +468,7 @@ function! s:DivRem(a, b) abort
 
   " Finalise the result pair. Shift the remainder back l:norm places.
   let l:q = s:NewInt(l:dg, a:a._neg != a:b._neg)
-  call s:TrimZeroes(l:q)
+  call s:TrimZeros(l:q)
   let l:r = s:Rsh(l:x, l:norm)
   if !l:r.IsZero()
     let l:r._neg = a:a._neg
@@ -520,7 +520,7 @@ function! s:SqrBasic(x) abort
     let l:dg[i+l:lenx] = l:u
   endfor
   let l:ret = s:NewInt(l:dg, 0)
-  return s:TrimZeroes(l:ret)
+  return s:TrimZeros(l:ret)
 endfunction
 
 " Returns a new Integer that is the square of Integer x. Comba algorithm.
@@ -545,7 +545,7 @@ function! s:SqrComba(x) abort
     let l:w1 = l:w / s:BASE
   endfor
   let l:ret = s:NewInt(l:dg, 0)
-  return s:TrimZeroes(l:ret)
+  return s:TrimZeros(l:ret)
 endfunction
 
 " Returns a new Integer that is the square of Integer x (x^2).

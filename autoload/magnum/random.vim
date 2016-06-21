@@ -121,9 +121,9 @@ function! s:IsInRange(limit, x) abort
   return 0
 endfunction
 
-" Removes trailing zeroes in magnitude dg. Similar to the function in magnum.vim
+" Removes trailing zeros in magnitude dg. Similar to the function in magnum.vim
 " but simpler, since it is unlikely that the loop is entered more than once.
-function! s:TrimZeroes(dg) abort
+function! s:TrimZeros(dg) abort
   while !empty(a:dg) && a:dg[-1] == 0
     call remove(a:dg, -1)
   endwhile
@@ -155,7 +155,7 @@ function! magnum#random#NextInt(val) abort
     endfor
     let l:dg[-1] = s:BitRsh(s:XsaddNextInt(), s:BITS - l:nbits)
     if s:IsInRange(a:val._dg, l:dg)
-      let l:ret._dg = s:TrimZeroes(l:dg)
+      let l:ret._dg = s:TrimZeros(l:dg)
       return l:ret
     endif
   endwhile
