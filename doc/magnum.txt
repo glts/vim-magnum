@@ -85,8 +85,8 @@ Integer.Pow({number})	Raises Integer to the power of {number}, which must be
 Accessor methods ~
 
 Integer.Number()	Returns Integer as a Vim number.
-			Throws "ERROR(NumberOverflow)" when the Integer does
-			not fit in a number.
+			Throws an exception when the Integer overflows (does
+			not fit in a number).
 
 Integer.String([{base}])
 			Returns Integer as a string.  An optional {base}
