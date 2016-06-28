@@ -1,5 +1,5 @@
 " This is the XORSHIFT-ADD algorithm as presented by Mutsuo Saito and Makoto
-" Matsumoto at http://www.math.sci.hiroshima-u.ac.jp/~%20m-mat/MT/XSADD/.
+" Matsumoto at http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/XSADD/.
 "
 " Copyright (c) 2014
 " Mutsuo Saito, Makoto Matsumoto, Manieth Corp., and Hiroshima University.
