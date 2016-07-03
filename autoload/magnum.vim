@@ -33,6 +33,7 @@ let s:BITS = 14
 let s:POW2 = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384]
 
 " Digit limit for Comba multiplication and squaring.
+" TODO With "+num64" enabled the Comba limit can probably be much higher.
 let s:COMBA_MAX_DIGITS = 8
 
 " Alphanumeric digits used in string representations.

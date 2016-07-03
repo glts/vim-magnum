@@ -184,7 +184,11 @@ describe "s:MulComba"
     let y = magnum#Int('85070591730234615865843651857942052863')
     Expect Call('s:MulComba', x, x) to_be_equal Call('s:MulBasic', x, x)
     Expect Call('s:MulComba', x, y) to_be_equal Call('s:MulBasic', x, y)
-    Expect Call('s:MulComba', y, y) not to_be_equal Call('s:MulBasic', y, y)
+
+    " TODO Add test for "+num64" after adapting COMBA_MAX_DIGITS.
+    if !has('num64')
+      Expect Call('s:MulComba', y, y) not to_be_equal Call('s:MulBasic', y, y)
+    endif
   end
 end
 
