@@ -107,7 +107,8 @@ function.
 RANDOM INTEGERS					*magnum-random*
 
 The function |magnum#random#NextInt| produces pseudo-random Integer values
-within a range.
+within a range.  This function employs the XORSHIFT-ADD algorithm available at
+http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/XSADD/.
 
 						*magnum#random#NextInt*
 magnum#random#NextInt({value})
@@ -120,7 +121,8 @@ magnum#random#NextInt({value})
 						*magnum#random#SetSeed*
 magnum#random#SetSeed({number})
 			Resets the state of the random number generator to the
-			state derived from seed {number}.
+			state derived from seed {number}.  Only the least
+			significant 32 bits of {number} are used.  |+num64|
 			Throws an exception when {number} is not a number.
 
  vim:tw=78:ts=8:ft=help:norl:
