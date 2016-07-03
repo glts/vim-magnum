@@ -309,20 +309,37 @@ describe "Integer.Number"
   end
 
   it "throws exception on integer overflow"
-    Expect expr { magnum#Int('10000000000').Number() } to_throw
-    Expect expr { magnum#Int('2200000000').Number() } to_throw
-    Expect expr { magnum#Int('2147483649').Number() } to_throw
-    Expect expr { magnum#Int('2147483648').Number() } to_throw
-    Expect magnum#Int('2147483647').Number() == 2147483647
-    Expect magnum#Int('2147483646').Number() == 2147483646
-    Expect magnum#Int('2147483639').Number() == 2147483639
-    Expect magnum#Int('-2147483639').Number() == -2147483639
-    Expect magnum#Int('-2147483647').Number() == -2147483647
-    Expect magnum#Int('-2147483648').Number() == -2147483648
-    Expect expr { magnum#Int('-2147483649').Number() } to_throw
-    Expect expr { magnum#Int('-2147483650').Number() } to_throw
-    Expect expr { magnum#Int('-2150000000').Number() } to_throw
-    Expect expr { magnum#Int('-99999999999999').Number() } to_throw
+    if has('num64')
+      Expect expr { magnum#Int('100000000000000000000000').Number() } to_throw
+      Expect expr { magnum#Int('9230000000000000000').Number() } to_throw
+      Expect expr { magnum#Int('9223372036854775809').Number() } to_throw
+      Expect expr { magnum#Int('9223372036854775808').Number() } to_throw
+      Expect magnum#Int('9223372036854775807').Number() == 9223372036854775807
+      Expect magnum#Int('9223372036854775806').Number() == 9223372036854775806
+      Expect magnum#Int('9223372036854775792').Number() == 9223372036854775792
+      Expect magnum#Int('-9223372036854775792').Number() == -9223372036854775792
+      Expect magnum#Int('-9223372036854775807').Number() == -9223372036854775807
+      Expect magnum#Int('-9223372036854775808').Number() == -9223372036854775808
+      Expect expr { magnum#Int('-9223372036854775809').Number() } to_throw
+      Expect expr { magnum#Int('-9223372036854775810').Number() } to_throw
+      Expect expr { magnum#Int('-9223400000000000000').Number() } to_throw
+      Expect expr { magnum#Int('-999999999999999999999999999').Number() } to_throw
+    else
+      Expect expr { magnum#Int('10000000000').Number() } to_throw
+      Expect expr { magnum#Int('2200000000').Number() } to_throw
+      Expect expr { magnum#Int('2147483649').Number() } to_throw
+      Expect expr { magnum#Int('2147483648').Number() } to_throw
+      Expect magnum#Int('2147483647').Number() == 2147483647
+      Expect magnum#Int('2147483646').Number() == 2147483646
+      Expect magnum#Int('2147483639').Number() == 2147483639
+      Expect magnum#Int('-2147483639').Number() == -2147483639
+      Expect magnum#Int('-2147483647').Number() == -2147483647
+      Expect magnum#Int('-2147483648').Number() == -2147483648
+      Expect expr { magnum#Int('-2147483649').Number() } to_throw
+      Expect expr { magnum#Int('-2147483650').Number() } to_throw
+      Expect expr { magnum#Int('-2150000000').Number() } to_throw
+      Expect expr { magnum#Int('-99999999999999').Number() } to_throw
+    endif
   end
 end
 

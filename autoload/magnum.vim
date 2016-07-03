@@ -685,11 +685,17 @@ function! magnum#Int(arg, ...) abort
   return s:ParseInt(l:string, l:base)
 endfunction
 
-let s:MIN_INT = magnum#Int(0x80000000)
-let s:MAX_INT = magnum#Int(0x7fffffff)
+if has('num64')
+  let s:MIN_INT = magnum#Int(0x8000000000000000)
+  let s:MAX_INT = magnum#Int(0x7fffffffffffffff)
+else
+  let s:MIN_INT = magnum#Int(0x80000000)
+  let s:MAX_INT = magnum#Int(0x7fffffff)
+endif
 
 " Returns this Integer as a Vim number. This throws an overflow exception when
-" the Integer doesn't fit in a signed int32.
+" the Integer doesn't fit in a number, which may be signed int32 or signed
+" int64 depending on the machine.
 function! magnum#Number() dict abort
   if self.Cmp(s:MIN_INT) >= 0 && self.Cmp(s:MAX_INT) <= 0
     let l:n = 0
