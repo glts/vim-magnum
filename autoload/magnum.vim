@@ -1,5 +1,5 @@
 " magnum.vim - Pure Vim script big integer library
-" Author: glts <676c7473@gmail.com>
+" Author: David Bürgin <676c7473@gmail.com>
 " Version: 2.0.0
 " Date: 2016-06-21
 "

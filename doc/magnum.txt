@@ -1,6 +1,6 @@
 *magnum.txt*	Pure Vim script big integer library
 
-Author: glts <676c7473@gmail.com>
+Author: David Bürgin <676c7473@gmail.com>
 License: Same terms as Vim itself (see |license|)
 
 DESCRIPTION					*magnum*

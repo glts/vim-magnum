@@ -2,6 +2,6 @@
     "name": "magnum.vim",
     "description": "Pure Vim script big integer library",
     "version": "2.0.0",
-    "author": "glts <676c7473@gmail.com>",
+    "author": "David Bürgin <676c7473@gmail.com>",
     "dependencies": {}
 }
