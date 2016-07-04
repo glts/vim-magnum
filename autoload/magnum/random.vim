@@ -157,14 +157,7 @@ endfunction
 
 " Returns a new, randomly generated Integer between zero inclusive and val
 " exclusive.
-function! magnum#random#NextInt(val) abort
-  if type(a:val) != type({}) || !has_key(a:val, '_dg')
-    " This check is duplicated from magnum.vim, unfortunately.
-    throw 'magnum: Argument of magnum#random#NextInt must be Integer'
-  elseif !a:val.IsPositive()
-    throw printf('magnum: Expected positive Integer, got %s', a:val.String())
-  endif
-
+function! s:NextInt(val) abort
   " magnum#Int(0) is a hack. As there is no way to access the s:NewInt factory
   " from this script, just use the public constructor to create the result
   " Integer. Initially, l:ret should be a new (no copy), non-negative Integer.
@@ -184,6 +177,29 @@ function! magnum#random#NextInt(val) abort
       return l:ret
     endif
   endwhile
+endfunction
+
+" This check duplicates the one in magnum.vim.
+function! s:EnsureIsInt(val) abort
+  if type(a:val) == type({}) && has_key(a:val, '_dg')
+    return a:val
+  endif
+  throw 'magnum: Argument of magnum#random#NextInt must be Integer'
+endfunction
+
+function! magnum#random#NextInt(arg, ...) abort
+  let l:arg = s:EnsureIsInt(a:arg)
+  if empty(a:000)
+    if l:arg.IsPositive()
+      return s:NextInt(l:arg)
+    endif
+    throw printf('magnum: Expected positive Integer, got %s', l:arg.String())
+  endif
+  let l:limit = s:EnsureIsInt(a:1)
+  if l:arg.Cmp(l:limit) < 0
+    return l:arg.Add(s:NextInt(l:limit.Sub(l:arg)))
+  endif
+  throw printf('magnum: Invalid range %s..%s', l:arg.String(), l:limit.String())
 endfunction
 
 " Resets the state of the random number generator to the state obtained from

@@ -210,36 +210,65 @@ describe "s:XsaddNextInt"
   end
 end
 
-describe "magnum#random#NextInt"
-  it "produces random numbers in range"
+describe "s:NextInt"
+  it "produces random non-negative Integers within bound"
     " A little fuzz testing.
-    call magnum#random#SetSeed(localtime())
     let thirteen = magnum#Int(13)
     for i in range(50)
-      let n = magnum#random#NextInt(thirteen)
+      let n = Call('s:NextInt', thirteen)
       Expect n.Cmp(thirteen) < 0
       Expect n.Cmp(g:magnum#ZERO) >= 0
     endfor
   end
 
   it "trims trailing zeros in result"
-    " Given the magnum#random#NextInt algorithm, this sequence of invocations
-    " would result in the digit lists [15514, 0], [15934, 0], [2309, 0], all
-    " with trailing zero. These zeros must not be in the result Integers.
+    " Given the s:NextInt algorithm, this sequence of invocations would result
+    " in the digit lists [15514, 0], [15934, 0], [2309, 0], all with trailing
+    " zero. These zeros must not be in the result Integers.
     call magnum#random#SetSeed(45678)
     let n = magnum#Int(16389)
-    Expect magnum#random#NextInt(n)._dg == [15514]
-    Expect magnum#random#NextInt(n)._dg == [15934]
-    Expect magnum#random#NextInt(n)._dg == [2309]
+    Expect Call('s:NextInt', n)._dg == [15514]
+    Expect Call('s:NextInt', n)._dg == [15934]
+    Expect Call('s:NextInt', n)._dg == [2309]
+  end
+end
+
+describe "magnum#random#NextInt"
+  it "produces random Integers between zero and bound"
+    let n = magnum#Int('9999999999999999999')
+    for i in range(200)
+      let random = magnum#random#NextInt(n)
+      Expect random.IsNegative() to_be_false
+      Expect random.Cmp(n) < 0
+    endfor
+  end
+
+  it "produces random Integers in range"
+    let dice = [1, 2, 3, 4, 5, 6]
+    for i in range(200)
+      let roll = magnum#random#NextInt(g:magnum#ONE, magnum#Int(7)).Number()
+      Expect index(dice, roll) >= 0
+    endfor
+
+    let start = magnum#Int(-75797721)
+    let end = magnum#Int(208274829)
+    for i in range(200)
+      let random = magnum#random#NextInt(start, end)
+      Expect random.Cmp(start) >= 0
+      Expect random.Cmp(end) < 0
+    endfor
   end
 
   it "throws exception when passed wrong argument"
-    Expect expr { magnum#random#NextInt({'too': 0xBAD}) } to_throw
     Expect expr { magnum#random#NextInt(1) } to_throw
     Expect expr { magnum#random#NextInt(g:magnum#ONE) } not to_throw
-
-    Expect expr { magnum#random#NextInt(magnum#Int(83).Neg()) } to_throw
     Expect expr { magnum#random#NextInt(g:magnum#ZERO) } to_throw
+    Expect expr { magnum#random#NextInt(magnum#Int(83).Neg()) } to_throw
+
+    Expect expr { magnum#random#NextInt(g:magnum#ONE, 14) } to_throw
+    Expect expr { magnum#random#NextInt(magnum#Int(1), g:magnum#ZERO) } to_throw
+    Expect expr { magnum#random#NextInt(magnum#Int(-32), magnum#Int(-669)) } to_throw
+    Expect expr { magnum#random#NextInt(g:magnum#ZERO, g:magnum#ONE, 1) } not to_throw
   end
 end
 
