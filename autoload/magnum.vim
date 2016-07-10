@@ -1,7 +1,7 @@
 " magnum.vim - Pure Vim script big integer library
-" Author: glts <676c7473@gmail.com>
-" Version: 2.0.0
-" Date: 2016-06-21
+" Author: David Bürgin <676c7473@gmail.com>
+" Version: 2.1.0
+" Date: 2016-07-10
 "
 " The code in this library uses standard algorithms. I relied heavily on the
 " descriptions in the book 'BigNum math' (Syngress, 2006) and the accompanying
@@ -33,6 +33,7 @@ let s:BITS = 14
 let s:POW2 = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384]
 
 " Digit limit for Comba multiplication and squaring.
+" TODO With "+num64" enabled the Comba limit can probably be much higher.
 let s:COMBA_MAX_DIGITS = 8
 
 " Alphanumeric digits used in string representations.
@@ -685,11 +686,17 @@ function! magnum#Int(arg, ...) abort
   return s:ParseInt(l:string, l:base)
 endfunction
 
-let s:MIN_INT = magnum#Int(0x80000000)
-let s:MAX_INT = magnum#Int(0x7fffffff)
+if has('num64')
+  let s:MIN_INT = magnum#Int(0x8000000000000000)
+  let s:MAX_INT = magnum#Int(0x7fffffffffffffff)
+else
+  let s:MIN_INT = magnum#Int(0x80000000)
+  let s:MAX_INT = magnum#Int(0x7fffffff)
+endif
 
 " Returns this Integer as a Vim number. This throws an overflow exception when
-" the Integer doesn't fit in a signed int32.
+" the Integer doesn't fit in a number, which may be signed int32 or signed
+" int64 depending on the machine.
 function! magnum#Number() dict abort
   if self.Cmp(s:MIN_INT) >= 0 && self.Cmp(s:MAX_INT) <= 0
     let l:n = 0

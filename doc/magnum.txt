@@ -1,6 +1,6 @@
 *magnum.txt*	Pure Vim script big integer library
 
-Author: glts <676c7473@gmail.com>
+Author: David Bürgin <676c7473@gmail.com>
 License: Same terms as Vim itself (see |license|)
 
 DESCRIPTION					*magnum*
@@ -85,8 +85,8 @@ Integer.Pow({number})	Raises Integer to the power of {number}, which must be
 Accessor methods ~
 
 Integer.Number()	Returns Integer as a Vim number.
-			Throws "ERROR(NumberOverflow)" when the Integer does
-			not fit in a number.
+			Throws an exception when the Integer overflows (does
+			not fit in a number).
 
 Integer.String([{base}])
 			Returns Integer as a string.  An optional {base}
@@ -107,20 +107,25 @@ function.
 RANDOM INTEGERS					*magnum-random*
 
 The function |magnum#random#NextInt| produces pseudo-random Integer values
-within a range.
+within a range.  This function employs the XORSHIFT-ADD algorithm available at
+http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/XSADD/.
 
 						*magnum#random#NextInt*
-magnum#random#NextInt({value})
-			Returns a new, randomly generated Integer between zero
-			inclusive and Integer {value} exclusive.  The given
-			{value} must be positive.
-			Throws an exception when {value} is not an Integer,
-			and when {value} is not positive.
+magnum#random#NextInt([{start},] {end})
+			Returns a new, randomly generated Integer in the
+			interval between {start} inclusive and {end}
+			exclusive.  The optional {start} must be strictly less
+			than {end}.  Default is |magnum#ZERO|.
+
+			Throws an exception when either argument is not an
+			Integer, and when {start} is greater than or equal to
+			{end}.
 
 						*magnum#random#SetSeed*
 magnum#random#SetSeed({number})
 			Resets the state of the random number generator to the
-			state derived from seed {number}.
+			state derived from seed {number}.  Only the least
+			significant 32 bits of {number} are used.  |+num64|
 			Throws an exception when {number} is not a number.
 
  vim:tw=78:ts=8:ft=help:norl:

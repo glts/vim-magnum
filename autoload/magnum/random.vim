@@ -1,5 +1,5 @@
 " This is the XORSHIFT-ADD algorithm as presented by Mutsuo Saito and Makoto
-" Matsumoto at http://www.math.sci.hiroshima-u.ac.jp/~%20m-mat/MT/XSADD/.
+" Matsumoto at http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/XSADD/.
 "
 " Copyright (c) 2014
 " Mutsuo Saito, Makoto Matsumoto, Manieth Corp., and Hiroshima University.
@@ -23,9 +23,15 @@
 " FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 " IN THE SOFTWARE.
 
+" Note that this implementation was originally written for (and remains
+" compatible with) Vim with 32-bit integers. See ":h +num64".
 let s:BITS = 32
 
-" Powers of two. Note that the final value is negative in signed int32.
+if has('num64')
+  let s:NUM64_MASK = 0x100000000
+endif
+
+" Powers of two.
 let s:POW2 = [0x1, 0x2, 0x4, 0x8,
     \ 0x10, 0x20, 0x40, 0x80,
     \ 0x100, 0x200, 0x400, 0x800,
@@ -64,19 +70,31 @@ endif
 
 " Bitwise left-shifts number x by b bits and returns the result. This function
 " assumes that 0 < b < 32.
-function! s:BitLsh(x, b) abort
-  return a:x * s:POW2[a:b]
-endfunction
+if has('num64')
+  function! s:BitLsh(x, b) abort
+    return (a:x * s:POW2[a:b]) % s:NUM64_MASK
+  endfunction
+else
+  function! s:BitLsh(x, b) abort
+    return a:x * s:POW2[a:b]
+  endfunction
+endif
 
 " Performs an unsigned bitwise right-shift on x by b bits and returns the
 " result. Assumes that 0 < b < 32.
-function! s:BitRsh(x, b) abort
-  if a:x < 0
-    return s:POW2[s:BITS-a:b-1] + (0x80000000 + a:x) / s:POW2[a:b]
-  else
+if has('num64')
+  function! s:BitRsh(x, b) abort
     return a:x / s:POW2[a:b]
-  endif
-endfunction
+  endfunction
+else
+  function! s:BitRsh(x, b) abort
+    if a:x < 0
+      return s:POW2[s:BITS-a:b-1] + (0x80000000 + a:x) / s:POW2[a:b]
+    else
+      return a:x / s:POW2[a:b]
+    endif
+  endfunction
+endif
 
 " Advances the random number generator to the next state.
 function! s:XsaddNextState() abort
@@ -92,8 +110,11 @@ function! s:XsaddInit(seed) abort
   let s:STATE = [a:seed, 0, 0, 0]
   for i in range(1, s:LOOP - 1)
     let l:prevstate = s:STATE[(i - 1) % 4]
-    let l:newstate = i + 1812433253 * s:BitXor(l:prevstate, s:BitRsh(l:prevstate, 30))
-    let s:STATE[i % 4] = s:BitXor(s:STATE[i % 4], l:newstate)
+    let l:newstate = 1812433253 * s:BitXor(l:prevstate, s:BitRsh(l:prevstate, 30))
+    if has('num64')
+      let l:newstate = l:newstate % s:NUM64_MASK
+    endif
+    let s:STATE[i % 4] = s:BitXor(s:STATE[i % 4], l:newstate + i)
   endfor
   " No need for the 'period certification' as no seed does produce [0, 0, 0, 0].
   for i in range(s:LOOP)
@@ -107,7 +128,11 @@ endfunction
 " Produces the next pseudo-random number from the random number generator.
 function! s:XsaddNextInt() abort
   call s:XsaddNextState()
-  return s:STATE[3] + s:STATE[2]
+  if has('num64')
+    return (s:STATE[3] + s:STATE[2]) % s:NUM64_MASK
+  else
+    return s:STATE[3] + s:STATE[2]
+  endif
 endfunction
 
 " Returns true if the magnitude (digit list) x is less than the magnitude
@@ -132,14 +157,7 @@ endfunction
 
 " Returns a new, randomly generated Integer between zero inclusive and val
 " exclusive.
-function! magnum#random#NextInt(val) abort
-  if type(a:val) != type({}) || !has_key(a:val, '_dg')
-    " This check is duplicated from magnum.vim, unfortunately.
-    throw 'magnum: Argument of magnum#random#NextInt must be Integer'
-  elseif !a:val.IsPositive()
-    throw printf('magnum: Expected positive Integer, got %s', a:val.String())
-  endif
-
+function! s:NextInt(val) abort
   " magnum#Int(0) is a hack. As there is no way to access the s:NewInt factory
   " from this script, just use the public constructor to create the result
   " Integer. Initially, l:ret should be a new (no copy), non-negative Integer.
@@ -161,13 +179,37 @@ function! magnum#random#NextInt(val) abort
   endwhile
 endfunction
 
+" This check duplicates the one in magnum.vim.
+function! s:EnsureIsInt(val) abort
+  if type(a:val) == type({}) && has_key(a:val, '_dg')
+    return a:val
+  endif
+  throw 'magnum: Argument of magnum#random#NextInt must be Integer'
+endfunction
+
+function! magnum#random#NextInt(arg, ...) abort
+  let l:arg = s:EnsureIsInt(a:arg)
+  if empty(a:000)
+    if l:arg.IsPositive()
+      return s:NextInt(l:arg)
+    endif
+    throw printf('magnum: Expected positive Integer, got %s', l:arg.String())
+  endif
+  let l:limit = s:EnsureIsInt(a:1)
+  if l:arg.Cmp(l:limit) < 0
+    return l:arg.Add(s:NextInt(l:limit.Sub(l:arg)))
+  endif
+  throw printf('magnum: Invalid range %s..%s', l:arg.String(), l:limit.String())
+endfunction
+
 " Resets the state of the random number generator to the state obtained from
-" the given number, which must be a Vim number.
+" the given number, which must be a Vim number. Only the least significant 32
+" bits are used, to ensure same functionality with and without "+num64".
 function! magnum#random#SetSeed(number) abort
   if type(a:number) != type(0)
     throw 'magnum: Argument of magnum#random#SetSeed must be number'
   endif
-  call s:XsaddInit(a:number)
+  call s:XsaddInit(has('num64') ? (a:number % s:NUM64_MASK) : a:number)
 endfunction
 
 " Seed using shuffled time and pid. Nothing serious, but given the range of
